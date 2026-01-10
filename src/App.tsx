@@ -346,6 +346,20 @@ const projectsData: ProjectData[] = [
   },
 ];
 
+type DesignItem = {
+  src: string;
+};
+
+// Diseño de Ads
+const design_items: DesignItem[] = [
+  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1768072388/2_b4hwes.svg" },
+  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1768072388/1_xqkckr.svg" },
+  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767741524/2_kqbhmq.svg" },
+  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767741523/1_fpmudc.svg" },
+  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767579179/new_arrival_5_cpgh6q.svg" },
+  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767579178/Escri%CC%81benos_2_ipdu08.svg" },
+];
+
 export default function App() {
   const [data, setData] = useState<Blob | null>(null);
 
@@ -414,6 +428,56 @@ export default function App() {
         {projectsData.map((project) => (
           <ProjectSection key={project.id} project={project} />
         ))}
+      </Flex>
+
+      {/* Diseño de Ads */}
+      <Flex direction="column" gap="8">
+        <Heading as="h2" size="2xl">
+          Diseño de Ads
+        </Heading>
+        <Carousel.Root
+          slideCount={design_items.length}
+          position="relative"
+          border="1px solid"
+          borderColor="gray.200"
+          overflow="hidden">
+          <Carousel.Control width="full" position="relative">
+            <Carousel.PrevTrigger asChild>
+              <ActionButton insetStart="4">
+                <LuChevronLeft />
+              </ActionButton>
+            </Carousel.PrevTrigger>
+
+            <Carousel.ItemGroup width="full">
+              {design_items.map((item, index) => (
+                <Carousel.Item key={item.src} index={index}>
+                  <Box w="100%" h="420px" bg="white" display="flex" alignItems="center" justifyContent="center">
+                    <Image
+                      src={item.src}
+                      alt={`Diseño de anuncio ${index + 1}`}
+                      maxW="100%"
+                      maxH="100%"
+                      w="auto"
+                      h="auto"
+                      objectFit="contain"
+                      loading="lazy"
+                    />
+                  </Box>
+                </Carousel.Item>
+              ))}
+            </Carousel.ItemGroup>
+
+            <Carousel.NextTrigger asChild>
+              <ActionButton insetEnd="4">
+                <LuChevronRight />
+              </ActionButton>
+            </Carousel.NextTrigger>
+
+            <Box position="absolute" bottom="6" width="full">
+              <Carousel.Indicators boxSize="2" opacity="0.5" _current={{ width: "10", opacity: 1 }} />
+            </Box>
+          </Carousel.Control>
+        </Carousel.Root>
       </Flex>
 
       {/* Experiencia */}
