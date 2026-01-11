@@ -7,7 +7,6 @@ import {
   Carousel,
   Image,
   IconButton,
-  Separator,
   Link,
   Accordion,
   Span,
@@ -89,7 +88,7 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
 
           <Carousel.ItemGroup width="full">
             {project.items.map((item, index) => (
-              <Carousel.Item key={item.src} index={index}>
+              <Carousel.Item key={item.src} index={index} bg="white">
                 <AspectRatio ratio={16 / 9} w="100%">
                   {item.type === "image" ? (
                     <Image src={item.src} alt={`${project.title} ${index + 1}`} objectFit="contain" loading="lazy" />
@@ -163,14 +162,7 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
         <Heading as="h3" size="lg">
           Funcionalidades
         </Heading>
-        <Accordion.Root
-          py="4"
-          px="2"
-          variant="subtle"
-          collapsible
-          defaultValue={["a"]}
-          border="1px solid"
-          borderColor="gray.200">
+        <Accordion.Root py="4" px="2" variant="enclosed" collapsible defaultValue={["a"]} bg="white">
           {project.features.map((item, index) => (
             <Accordion.Item key={index} value={item.value}>
               <Accordion.ItemTrigger cursor="pointer">
@@ -227,12 +219,56 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
           desarrolló el proyecto.
         </Text>
       </Flex>
-      <Separator />
     </Flex>
   );
 };
 
 // --- DATA ---
+// tecnologías
+type TechCategory = {
+  id: string;
+  title: string;
+  items: string[];
+};
+const techStackData: TechCategory[] = [
+  {
+    id: "design",
+    title: "Diseño UX UI",
+    items: ["Figma", "Canva"],
+  },
+  {
+    id: "frontend",
+    title: "Frontend",
+    items: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js"],
+  },
+  {
+    id: "backend",
+    title: "Backend",
+    items: ["Node.js", "Express", "Prisma", "MySQL", "PostgreSQL"],
+  },
+  {
+    id: "infra",
+    title: "Infraestructura & Services",
+    items: ["Docker", "Git", "GitHub", "Supabase", "Render", "Vercel", "Railway", "Brevo"],
+  },
+  {
+    id: "platforms",
+    title: "CMS",
+    items: ["WordPress"],
+  },
+
+  {
+    id: "org",
+    title: "Organización & Productividad",
+    items: ["Notion", "ClickUp"],
+  },
+  {
+    id: "others",
+    title: "Otros Lenguajes",
+    items: ["C", "C++"],
+  },
+];
+
 const projectsData: ProjectData[] = [
   {
     id: "unexo",
@@ -351,13 +387,75 @@ type DesignItem = {
 };
 
 // Diseño de Ads
-const design_items: DesignItem[] = [
-  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1768072388/2_b4hwes.svg" },
-  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1768072388/1_xqkckr.svg" },
-  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767741524/2_kqbhmq.svg" },
-  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767741523/1_fpmudc.svg" },
-  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767579179/new_arrival_5_cpgh6q.svg" },
-  { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767579178/Escri%CC%81benos_2_ipdu08.svg" },
+type AdsBrand = {
+  id: string;
+  brand: string;
+  items: DesignItem[];
+};
+
+const adsDesignData: AdsBrand[] = [
+  {
+    id: "lacopia",
+    brand: "La Copia",
+    items: [
+      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1768072388/2_b4hwes.svg" },
+      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1768072388/1_xqkckr.svg" },
+    ],
+  },
+  {
+    id: "amuyen",
+    brand: "Amuyen",
+    items: [
+      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767741524/2_kqbhmq.svg" },
+      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767741523/1_fpmudc.svg" },
+    ],
+  },
+  {
+    id: "protolab",
+    brand: "Protolab",
+    items: [
+      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767579179/new_arrival_5_cpgh6q.svg" },
+      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767579178/Escri%CC%81benos_2_ipdu08.svg" },
+    ],
+  },
+];
+
+// Experiencia
+type ExperienceItem = {
+  id: string;
+  period: string;
+  role: string;
+};
+const experienceData: ExperienceItem[] = [
+  {
+    id: "fs-2024",
+    period: "2024 - 2025",
+    role: "Full Stack Developer",
+  },
+  {
+    id: "protolab",
+    period: "2025 - presente",
+    role: "Designer & Full Stack Developer en Protolab",
+  },
+];
+
+// Estudios
+type StudyItem = {
+  id: string;
+  period: string;
+  title: string;
+};
+const studiesData: StudyItem[] = [
+  {
+    id: "music",
+    period: "2016 - 2021",
+    title: "Profesor de Música (ISSC)",
+  },
+  {
+    id: "web",
+    period: "2025 - presente",
+    title: "Técnico en Programación Web (Universidad Nacional de San Juan)",
+  },
 ];
 
 export default function App() {
@@ -401,83 +499,127 @@ export default function App() {
         <Heading as="h2" size="2xl">
           Tecnologías y Herramientas de Desarrollo
         </Heading>
-        <Flex gap={{ base: "12", md: "32" }} color="fg.muted" wrap="wrap">
-          <Flex as="ul" direction="column" listStyle="none">
-            {["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Node.js", "Express", "C", "C++"].map(
-              (t) => (
-                <li key={t}>{t}</li>
-              )
-            )}
-          </Flex>
-          <Flex as="ul" direction="column" listStyle="none">
-            {["MySQL", "PostgreSQL", "Prisma", "Docker", "WordPress", "Git", "GitHub", "Figma", "Canvas", "Notion"].map(
-              (t) => (
-                <li key={t}>{t}</li>
-              )
-            )}
-          </Flex>
-        </Flex>
+
+        <Accordion.Root collapsible variant="enclosed">
+          {techStackData.map((category) => (
+            <Accordion.Item key={category.id} value={category.id}>
+              {/* Header */}
+              <Accordion.ItemTrigger cursor="pointer">
+                <Span flex="1">{category.title}</Span>
+                <Accordion.ItemIndicator />
+              </Accordion.ItemTrigger>
+
+              {/* Contenido */}
+              <Accordion.ItemContent>
+                <Accordion.ItemBody>
+                  <Flex as="ul" gap="8" wrap="wrap" color="fg.muted" listStyle="none" fontSize="xs">
+                    {category.items.map((tech) => (
+                      <li key={tech}>{tech}</li>
+                    ))}
+                  </Flex>
+                </Accordion.ItemBody>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+          ))}
+        </Accordion.Root>
       </Flex>
 
       {/* Proyectos */}
       <Flex direction="column" gap="8">
         <Heading as="h2" size="2xl">
-          Proyectos
+          Proyectos Full Stack
         </Heading>
-        <Separator />
-        {projectsData.map((project) => (
-          <ProjectSection key={project.id} project={project} />
-        ))}
-      </Flex>
+        <Accordion.Root collapsible variant="enclosed">
+          {projectsData.map((project) => (
+            <Accordion.Item key={project.id} value={project.id}>
+              {/* Header (solo nombre del proyecto) */}
+              <Accordion.ItemTrigger cursor="pointer">
+                <Span flex="1">{project.title}</Span>
+                <Accordion.ItemIndicator />
+              </Accordion.ItemTrigger>
 
+              {/* Contenido (proyecto completo) */}
+              <Accordion.ItemContent>
+                <Accordion.ItemBody>
+                  <ProjectSection project={project} />
+                </Accordion.ItemBody>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+          ))}
+        </Accordion.Root>
+      </Flex>
       {/* Diseño de Ads */}
-      <Flex direction="column" gap="8">
+      <Flex direction="column" gap="4">
         <Heading as="h2" size="2xl">
           Diseño de Ads
         </Heading>
-        <Carousel.Root
-          slideCount={design_items.length}
-          position="relative"
-          border="1px solid"
-          borderColor="gray.200"
-          overflow="hidden">
-          <Carousel.Control width="full" position="relative">
-            <Carousel.PrevTrigger asChild>
-              <ActionButton insetStart="4">
-                <LuChevronLeft />
-              </ActionButton>
-            </Carousel.PrevTrigger>
 
-            <Carousel.ItemGroup width="full">
-              {design_items.map((item, index) => (
-                <Carousel.Item key={item.src} index={index}>
-                  <Box w="100%" h="420px" bg="white" display="flex" alignItems="center" justifyContent="center">
-                    <Image
-                      src={item.src}
-                      alt={`Diseño de anuncio ${index + 1}`}
-                      maxW="100%"
-                      maxH="100%"
-                      w="auto"
-                      h="auto"
-                      objectFit="contain"
-                      loading="lazy"
-                    />
-                  </Box>
-                </Carousel.Item>
-              ))}
-            </Carousel.ItemGroup>
+        <Accordion.Root collapsible variant="enclosed">
+          {adsDesignData.map((brand) => (
+            <Accordion.Item key={brand.id} value={brand.id}>
+              {/* Header = Marca */}
+              <Accordion.ItemTrigger cursor="pointer">
+                <Span flex="1">{brand.brand}</Span>
+                <Accordion.ItemIndicator />
+              </Accordion.ItemTrigger>
 
-            <Carousel.NextTrigger asChild>
-              <ActionButton insetEnd="4">
-                <LuChevronRight />
-              </ActionButton>
-            </Carousel.NextTrigger>
+              {/* Contenido = Carousel */}
+              <Accordion.ItemContent overflow="hidden">
+                <Accordion.ItemBody>
+                  <Carousel.Root
+                    slideCount={brand.items.length}
+                    position="relative"
+                    border="1px solid"
+                    borderColor="gray.200"
+                    overflow="hidden">
+                    <Carousel.Control width="full" position="relative">
+                      <Carousel.PrevTrigger asChild>
+                        <ActionButton insetStart="4">
+                          <LuChevronLeft />
+                        </ActionButton>
+                      </Carousel.PrevTrigger>
 
-            <Box position="absolute" bottom="6" width="full">
-              <Carousel.Indicators boxSize="2" opacity="0.5" _current={{ width: "10", opacity: 1 }} />
-            </Box>
-          </Carousel.Control>
-        </Carousel.Root>
+                      <Carousel.ItemGroup width="full">
+                        {brand.items.map((item, index) => (
+                          <Carousel.Item key={item.src} index={index}>
+                            <Box
+                              w="100%"
+                              h="420px"
+                              bg="white"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center">
+                              <Image
+                                src={item.src}
+                                alt={`${brand.brand} anuncio ${index + 1}`}
+                                maxW="100%"
+                                maxH="100%"
+                                w="auto"
+                                h="auto"
+                                objectFit="contain"
+                                loading="lazy"
+                              />
+                            </Box>
+                          </Carousel.Item>
+                        ))}
+                      </Carousel.ItemGroup>
+
+                      <Carousel.NextTrigger asChild>
+                        <ActionButton insetEnd="4">
+                          <LuChevronRight />
+                        </ActionButton>
+                      </Carousel.NextTrigger>
+
+                      <Box position="absolute" bottom="6" width="full">
+                        <Carousel.Indicators boxSize="2" opacity="0.5" _current={{ width: "10", opacity: 1 }} />
+                      </Box>
+                    </Carousel.Control>
+                  </Carousel.Root>
+                </Accordion.ItemBody>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+          ))}
+        </Accordion.Root>
       </Flex>
 
       {/* Experiencia */}
@@ -485,16 +627,25 @@ export default function App() {
         <Heading as="h2" size="2xl">
           Experiencia
         </Heading>
-        <Flex direction="column" gap="2">
-          <Flex justify="space-between" color="fg.muted" gap="8">
-            <Text>Full Stack Developer</Text>
-            <Text>2024 - 2025</Text>
-          </Flex>
-          <Flex justify="space-between" color="fg.muted" gap="8">
-            <Text>Designer & Full Stack Developer en Protolab</Text>
-            <Text>2025 - presente</Text>
-          </Flex>
-        </Flex>
+
+        <Accordion.Root collapsible variant="enclosed">
+          {experienceData.map((exp) => (
+            <Accordion.Item key={exp.id} value={exp.id}>
+              {/* Header = fechas */}
+              <Accordion.ItemTrigger cursor="pointer">
+                <Span flex="1">{exp.period}</Span>
+                <Accordion.ItemIndicator />
+              </Accordion.ItemTrigger>
+
+              {/* Contenido = rol */}
+              <Accordion.ItemContent>
+                <Accordion.ItemBody>
+                  <Text color="fg.muted">{exp.role}</Text>
+                </Accordion.ItemBody>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+          ))}
+        </Accordion.Root>
       </Flex>
 
       {/* Estudios */}
@@ -502,18 +653,26 @@ export default function App() {
         <Heading as="h2" size="2xl">
           Estudios formales
         </Heading>
-        <Flex direction="column" gap="2">
-          <Flex justify="space-between" color="fg.muted" gap="8">
-            <Text>Profesor de Música (ISSC) </Text>
-            <Text>2016 - 2021</Text>
-          </Flex>
-          <Flex justify="space-between" color="fg.muted" gap="8">
-            <Text>Técnico en Programación Web (Universidad Nacional de San Juan) </Text>
-            <Text>2025 - pte.</Text>
-          </Flex>
-        </Flex>
-      </Flex>
 
+        <Accordion.Root collapsible variant="enclosed">
+          {studiesData.map((study) => (
+            <Accordion.Item key={study.id} value={study.id}>
+              {/* Header = fechas */}
+              <Accordion.ItemTrigger cursor="pointer">
+                <Span flex="1">{study.period}</Span>
+                <Accordion.ItemIndicator />
+              </Accordion.ItemTrigger>
+
+              {/* Contenido = título */}
+              <Accordion.ItemContent>
+                <Accordion.ItemBody>
+                  <Text color="fg.muted">{study.title}</Text>
+                </Accordion.ItemBody>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+          ))}
+        </Accordion.Root>
+      </Flex>
       {/* Contacto */}
       <Flex direction="column" gap="4">
         <Heading as="h2" size="2xl">
