@@ -12,6 +12,7 @@ import {
   Span,
   Button,
   DownloadTrigger,
+  Separator,
 } from "@chakra-ui/react";
 import { forwardRef, useState, useEffect } from "react";
 import type { IconButtonProps } from "@chakra-ui/react";
@@ -64,20 +65,21 @@ const ActionButton = forwardRef<HTMLButtonElement, IconButtonProps>(function Act
 // --- Componente de Proyecto Reutilizable ---
 const ProjectSection = ({ project }: { project: ProjectData }) => {
   return (
-    <Flex direction="column" gap="8">
-      {/* Título */}
-      <Heading as="h3" size="lg" textAlign="center">
-        <Link href={project.titleHref} target="_blank" rel="noopener noreferrer">
-          {project.title}
+    <Flex direction="column" gap="2">
+      <Flex w="100%" justify="end">
+        <Link fontWeight="bold" href={project.titleHref} target="_blank" rel="noopener noreferrer">
+          Ir a la web
+          <HiMiniArrowTrendingUp />
         </Link>
-      </Heading>
+      </Flex>
 
       {/* Carousel */}
       <Carousel.Root
         slideCount={project.items.length}
         position="relative"
+        borderRadius="sm"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border"
         overflow="hidden">
         <Carousel.Control width="full" position="relative">
           <Carousel.PrevTrigger asChild>
@@ -88,7 +90,7 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
 
           <Carousel.ItemGroup width="full">
             {project.items.map((item, index) => (
-              <Carousel.Item key={item.src} index={index} bg="white">
+              <Carousel.Item key={`${project.id}-item-${index}`} index={index} bg="white">
                 <AspectRatio ratio={16 / 9} w="100%">
                   {item.type === "image" ? (
                     <Image src={item.src} alt={`${project.title} ${index + 1}`} objectFit="contain" loading="lazy" />
@@ -120,7 +122,7 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
       </Carousel.Root>
 
       {/* Descripción */}
-      <Flex direction="column" gap="2">
+      <Flex p="2" direction="column" gap="2" borderRadius="sm" border="1px solid" borderColor="border">
         <Heading as="h3" size="lg">
           Descripción
         </Heading>
@@ -128,49 +130,50 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
       </Flex>
 
       {/* Tecnologías */}
-      <Flex direction="column" gap="2">
+      <Flex p="2" direction="column" gap="2" borderRadius="sm" border="1px solid" borderColor="border">
         <Heading as="h3" size="lg">
           Tecnologías
         </Heading>
-        <Flex as="ul" color="fg.muted" gap="4" overflow="auto">
+        <Flex as="ul" color="fg.muted" gap="4" overflow="auto" listStyleType="none">
           {project.technologies.map((tech, i) => (
-            <li key={tech} style={{ listStyle: "none", display: "flex", gap: "1rem", alignItems: "center" }}>
+            <Flex as="li" key={tech} gap="1rem" align="center" whiteSpace="nowrap">
               {tech}
-              {i < project.technologies.length - 1 && <span>-</span>}
-            </li>
+              {i < project.technologies.length - 1 && <span> · </span>}
+            </Flex>
           ))}
         </Flex>
       </Flex>
 
       {/* Infraestructura */}
-      <Flex direction="column" gap="2">
+      <Flex p="2" direction="column" gap="2" borderRadius="sm" border="1px solid" borderColor="border">
         <Heading as="h3" size="lg">
           Infraestructura
         </Heading>
-        <Flex as="ul" color="fg.muted" gap="4" overflow="auto">
+        <Flex as="ul" color="fg.muted" gap="4" overflow="auto" listStyleType="none">
           {project.infrastructure.map((infra, i) => (
-            <li key={infra} style={{ listStyle: "none", display: "flex", gap: "1rem", alignItems: "center" }}>
+            <Flex as="li" key={infra} gap="1rem" align="center" whiteSpace="nowrap">
               {infra}
-              {i < project.infrastructure.length - 1 && <span>-</span>}
-            </li>
+              {i < project.infrastructure.length - 1 && <span> · </span>}
+            </Flex>
           ))}
         </Flex>
       </Flex>
 
       {/* Funcionalidades */}
-      <Flex direction="column" gap="2">
+      <Flex p="2" direction="column" gap="2" borderRadius="sm" border="1px solid" borderColor="border">
         <Heading as="h3" size="lg">
           Funcionalidades
         </Heading>
-        <Accordion.Root py="4" px="2" variant="enclosed" collapsible defaultValue={["a"]} bg="white">
+        {/* Corrección: defaultValue apunta al primer elemento real o array vacío */}
+        <Accordion.Root collapsible variant="enclosed" defaultValue={[project.features[0]?.value]}>
           {project.features.map((item, index) => (
             <Accordion.Item key={index} value={item.value}>
               <Accordion.ItemTrigger cursor="pointer">
                 <Span flex="1">{item.title}</Span>
                 <Accordion.ItemIndicator />
               </Accordion.ItemTrigger>
-              <Accordion.ItemContent>
-                <Accordion.ItemBody>{item.text}</Accordion.ItemBody>
+              <Accordion.ItemContent bg="bg">
+                <Accordion.ItemBody color="fg.muted">{item.text}</Accordion.ItemBody>
               </Accordion.ItemContent>
             </Accordion.Item>
           ))}
@@ -178,7 +181,7 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
       </Flex>
 
       {/* Estado */}
-      <Flex direction="column" gap="2">
+      <Flex p="2" direction="column" gap="2" borderRadius="sm" border="1px solid" borderColor="border">
         <Heading as="h3" size="lg">
           Estado
         </Heading>
@@ -186,13 +189,14 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
       </Flex>
 
       {/* Links */}
-      <Flex direction="column" gap="2">
+      <Flex p="2" direction="column" gap="2" borderRadius="sm" border="1px solid" borderColor="border" bg="bg">
         <Heading as="h3" size="lg">
           Links
         </Heading>
         <Flex gap="4" wrap="wrap">
           {project.links.map((link, i) => (
-            <Button key={i} size="xs" variant="outline" disabled={link.disabled}>
+            // Corrección: Usamos asChild para evitar anidar <button> y <a>
+            <Button key={i} size="xs" variant="outline" disabled={link.disabled} asChild={!link.disabled}>
               {link.disabled ? (
                 <>
                   {link.label}
@@ -212,7 +216,8 @@ const ProjectSection = ({ project }: { project: ProjectData }) => {
             </Button>
           ))}
         </Flex>
-        <Text color="fg.error" fontSize="xs">
+        <Separator />
+        <Text color="fg.error" fontSize="2xs">
           Por motivos de seguridad y privacidad del producto, no puedo compartir los repositorios originales.
           <br />
           Sin embargo, creé estos repositorios con lógica parcial para mostrar la arquitectura y la forma en que se
@@ -233,13 +238,13 @@ type TechCategory = {
 const techStackData: TechCategory[] = [
   {
     id: "design",
-    title: "Diseño UX UI",
-    items: ["Figma", "Canva"],
+    title: "Diseño UX UI y Experiencia Sonora",
+    items: ["Figma", "Canva", "FL Studio", "Ableton Live"],
   },
   {
     id: "frontend",
     title: "Frontend",
-    items: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js"],
+    items: ["HTML", "CSS", "Tailwind CSS", "ChakraUI", "JavaScript", "TypeScript", "React", "Next.js"],
   },
   {
     id: "backend",
@@ -256,7 +261,6 @@ const techStackData: TechCategory[] = [
     title: "CMS",
     items: ["WordPress"],
   },
-
   {
     id: "org",
     title: "Organización & Productividad",
@@ -275,8 +279,11 @@ const projectsData: ProjectData[] = [
     title: "Unexo",
     titleHref: "https://www.unexoapp.com",
     items: [
-      { type: "image", src: "https://res.cloudinary.com/dgtcs3twg/image/upload/v1767798701/Unexo_2_diw2ge.svg" },
-      { type: "video", src: "https://res.cloudinary.com/dgtcs3twg/video/upload/v1767800691/0107_hm3gz1.mov" },
+      { type: "image", src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1769026903/1_kjtd5h.svg" },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1769287715/Captura_de_pantalla_2026-01-24_a_la_s_17.48.22_kzr1ku.png",
+      },
     ],
     description:
       "Unexo es una plataforma donde estudiantes de la Universidad Nacional de San Juan comparten y acceden a recursos académicos de manera gratuita, facilitando la organización y el aprendizaje colaborativo.",
@@ -321,8 +328,9 @@ const projectsData: ProjectData[] = [
       </>
     ),
     links: [
-      { label: "Codigo Frontend", href: "https://github.com/FernandoAvZarate/unexo-showcase-frontend" },
-      { label: "Codigo Backend", href: "https://github.com/FernandoAvZarate/unexo-showcase-backend" },
+      // Corrección: Tildes agregadas a 'Código'
+      { label: "Código Frontend", href: "https://github.com/FernandoAvZarate/unexo-showcase-frontend" },
+      { label: "Código Backend", href: "https://github.com/FernandoAvZarate/unexo-showcase-backend" },
       {
         label: "Proyecto en Figma",
         href: "https://www.figma.com/design/scCTlRc3zS0l8M0e0S03LJ/Unexo?node-id=0-1&t=0DRiE42fu2Mo5GfJ-1",
@@ -330,94 +338,111 @@ const projectsData: ProjectData[] = [
     ],
   },
   {
-    id: "sentinel",
-    title: "Sentinel",
+    id: "nodo",
+    title: "Nodo",
     titleHref: "/",
     items: [
-      { type: "image", src: "https://res.cloudinary.com/dgtcs3twg/image/upload/v1767798928/Sentinell_qifbmh.svg" },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1769027844/N_4_ljxyo5.svg",
+      },
     ],
     description:
-      "Sentinel es una plataforma de gestión operativa para empresas de seguridad privada, diseñada para centralizar la administración de guardias, objetivos y turnos. Permite asignar y controlar turnos de forma semanal, visualizar el estado operativo en tiempo real, gestionar datos de guardias y clientes, y detectar rápidamente faltantes o incidencias. El sistema ofrece un dashboard con métricas clave, herramientas de planificación y acceso rápido a la información crítica, optimizando la organización del personal y reduciendo errores operativos.",
-    technologies: ["TypeScript", "React", "Next", "ChakraUI", "Tailwind", "Node.js", "Express", "PostgreSQL", "Prisma"],
-    infrastructure: ["Vercel", "Render", "Supabase", "Docker", "Brevo"],
+      "Nodo es una plataforma de publicidad digital local diseñada para conectar comercios y marcas locales con sitios web y aplicaciones de su misma región. El sistema permite a los anunciantes promocionarse en medios digitales locales reales, mientras que los desarrolladores pueden monetizar sus proyectos sin depender de redes publicitarias globales. Nodo prioriza el contexto local, el contacto directo con los comercios y un modelo de monetización justo, incentivando la creación y sostenimiento de un ecosistema web local rentable.",
+    technologies: ["TypeScript", "React", "Next.js", "Tailwind", "Node.js", "Nest", "PostgreSQL", "Prisma"],
+    infrastructure: ["Vercel", "Render", "Supabase", "Docker"],
     features: [
       {
-        value: "dashboard-operativo",
-        title: "Dashboard Operativo",
-        text: "Panel principal con información crítica en tiempo real: estado general de los turnos, porcentaje de turnos confirmados y pendientes, objetivos con cobertura incompleta y tiempos límite para la generación de turnos semanales. Incluye accesos rápidos a las acciones más frecuentes y un calendario de reuniones operativas en modo control.",
+        value: "advertiser-module",
+        title: "Módulo para Anunciantes",
+        text: "Panel de gestión orientado a comercios y marcas locales. Permite visualizar en qué sitios web y aplicaciones se están mostrando sus anuncios, junto con métricas clave como impresiones, clics y rendimiento general de las campañas. El módulo prioriza la transparencia y el control, facilitando el seguimiento del impacto real de la publicidad en medios locales.",
       },
       {
-        value: "guardias-gestion",
-        title: "Gestión de Guardias",
-        text: "Módulo centralizado para la administración del personal de seguridad. Permite registrar, editar y consultar información de los guardias, visualizar su estado laboral, datos de contacto y asignaciones actuales. Incluye búsqueda y filtros por estado, objetivo o supervisor, con acceso a fichas individuales detalladas.",
+        value: "developer-module",
+        title: "Módulo para Desarrolladores",
+        text: "Espacio dedicado a desarrolladores y propietarios de sitios web o aplicaciones. Permite visualizar la cantidad de anuncios disponibles, impresiones generadas, ingresos estimados y valor de pago por cada 1000 impresiones (CPM), diferenciados según el formato publicitario utilizado.",
       },
       {
-        value: "objetivos-turnos",
-        title: "Gestión de Objetivos y Turnos",
-        text: "Administración de objetivos (clientes o locaciones) con definición de turnos operativos por franja horaria. Configuración de horarios, cantidad de guardias requeridos y asignación de personal por turno. Visualización clara de turnos completos, incompletos o pendientes para una planificación eficiente.",
+        value: "ad-integration",
+        title: "Integración de Anuncios mediante Librería",
+        text: "Los anuncios se integran a los proyectos mediante la instalación de una librería y el uso de componentes específicos. Esta abstracción simplifica la implementación técnica, permite identificar automáticamente el tipo de anuncio renderizado y asegura una integración consistente en distintos entornos web y mobile.",
       },
       {
-        value: "asignacion-planificacion",
-        title: "Asignación y Planificación Semanal",
-        text: "Herramientas específicas para la generación y asignación de turnos semanales. Permite detectar rápidamente faltantes de cobertura, reasignar guardias y mantener el control sobre la planificación operativa sin interferir con el dashboard de monitoreo.",
+        value: "api-endpoints",
+        title: "Endpoints y Claves de Integración",
+        text: "Sistema de endpoints y claves de acceso para desarrolladores que permite importar anuncios, registrar impresiones y clics, y comunicar eventos relevantes a la plataforma. Este enfoque habilita una integración flexible y escalable, manteniendo control y seguridad en el intercambio de datos.",
       },
       {
-        value: "control-estado",
-        title: "Control Operativo y Seguimiento",
-        text: "Sistema de seguimiento del estado de los guardias y los objetivos. Permite identificar licencias, bajas, ausencias y situaciones operativas especiales. Facilita la toma de decisiones rápidas ante imprevistos y mejora la trazabilidad de la operación.",
+        value: "format-aware-monetization",
+        title: "Monetización Basada en Formatos",
+        text: "Nodo identifica el formato publicitario que se está mostrando (Half Page, Billboard, banners y formatos mobile) y utiliza esta información para calcular métricas e ingresos de manera diferenciada, incentivando el uso de formatos de mayor valor e impacto.",
       },
     ],
     statusText: (
       <>
-        El proyecto se encuentra actualmente en desarrollo.
+        El proyecto se encuentra actualmente en desarrollo activo.
         <br />
-        El lanzamiento estimado está previsto para junio de 2026.
+        Concebido como una iniciativa a largo plazo orientada al crecimiento del ecosistema digital local.
       </>
     ),
     links: [
-      { label: "Codigo Frontend", disabled: true },
-      { label: "Codigo Backend", disabled: true },
-      { label: "Proyecto en Figma", disabled: true },
+      { label: "Código Frontend", disabled: true },
+      { label: "Código Backend", disabled: true },
+      { label: "Documentación Técnica", disabled: true },
     ],
   },
-];
 
-type DesignItem = {
-  src: string;
-};
-
-// Diseño de Ads
-type AdsBrand = {
-  id: string;
-  brand: string;
-  items: DesignItem[];
-};
-
-const adsDesignData: AdsBrand[] = [
-  {
-    id: "lacopia",
-    brand: "La Copia",
-    items: [
-      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1768072388/2_b4hwes.svg" },
-      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1768072388/1_xqkckr.svg" },
-    ],
-  },
-  {
-    id: "amuyen",
-    brand: "Amuyen",
-    items: [
-      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767741524/2_kqbhmq.svg" },
-      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767741523/1_fpmudc.svg" },
-    ],
-  },
-  {
-    id: "protolab",
-    brand: "Protolab",
-    items: [
-      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767579179/new_arrival_5_cpgh6q.svg" },
-      { src: "https://res.cloudinary.com/ducvmt3te/image/upload/v1767579178/Escri%CC%81benos_2_ipdu08.svg" },
-    ],
-  },
+  // {
+  //   id: "sentinel",
+  //   title: "Sentinel",
+  //   titleHref: "/",
+  //   items: [
+  //     { type: "image", src: "https://res.cloudinary.com/dgtcs3twg/image/upload/v1767798928/Sentinell_qifbmh.svg" },
+  //   ],
+  //   description:
+  //     "Sentinel es una plataforma de gestión operativa para empresas de seguridad privada, diseñada para centralizar la administración de guardias, objetivos y turnos. Permite asignar y controlar turnos de forma semanal, visualizar el estado operativo en tiempo real, gestionar datos de guardias y clientes, y detectar rápidamente faltantes o incidencias. El sistema ofrece un dashboard con métricas clave, herramientas de planificación y acceso rápido a la información crítica, optimizando la organización del personal y reduciendo errores operativos.",
+  //   technologies: ["TypeScript", "React", "Next", "ChakraUI", "Tailwind", "Node.js", "Express", "PostgreSQL", "Prisma"],
+  //   infrastructure: ["Vercel", "Render", "Supabase", "Docker", "Brevo"],
+  //   features: [
+  //     {
+  //       value: "dashboard-operativo",
+  //       title: "Dashboard Operativo",
+  //       text: "Panel principal con información crítica en tiempo real: estado general de los turnos, porcentaje de turnos confirmados y pendientes, objetivos con cobertura incompleta y tiempos límite para la generación de turnos semanales. Incluye accesos rápidos a las acciones más frecuentes y un calendario de reuniones operativas en modo control.",
+  //     },
+  //     {
+  //       value: "guardias-gestion",
+  //       title: "Gestión de Guardias",
+  //       text: "Módulo centralizado para la administración del personal de seguridad. Permite registrar, editar y consultar información de los guardias, visualizar su estado laboral, datos de contacto y asignaciones actuales. Incluye búsqueda y filtros por estado, objetivo o supervisor, con acceso a fichas individuales detalladas.",
+  //     },
+  //     {
+  //       value: "objetivos-turnos",
+  //       title: "Gestión de Objetivos y Turnos",
+  //       text: "Administración de objetivos (clientes o locaciones) con definición de turnos operativos por franja horaria. Configuración de horarios, cantidad de guardias requeridos y asignación de personal por turno. Visualización clara de turnos completos, incompletos o pendientes para una planificación eficiente.",
+  //     },
+  //     {
+  //       value: "asignacion-planificacion",
+  //       title: "Asignación y Planificación Semanal",
+  //       text: "Herramientas específicas para la generación y asignación de turnos semanales. Permite detectar rápidamente faltantes de cobertura, reasignar guardias y mantener el control sobre la planificación operativa sin interferir con el dashboard de monitoreo.",
+  //     },
+  //     {
+  //       value: "control-estado",
+  //       title: "Control Operativo y Seguimiento",
+  //       text: "Sistema de seguimiento del estado de los guardias y los objetivos. Permite identificar licencias, bajas, ausencias y situaciones operativas especiales. Facilita la toma de decisiones rápidas ante imprevistos y mejora la trazabilidad de la operación.",
+  //     },
+  //   ],
+  //   statusText: (
+  //     <>
+  //       El proyecto se encuentra actualmente en desarrollo.
+  //       <br />
+  //       El lanzamiento estimado está previsto para junio de 2026.
+  //     </>
+  //   ),
+  //   links: [
+  //     { label: "Código Frontend", disabled: true },
+  //     { label: "Código Backend", disabled: true },
+  //     { label: "Proyecto en Figma", disabled: true },
+  //   ],
+  // },
 ];
 
 // Experiencia
@@ -428,14 +453,14 @@ type ExperienceItem = {
 };
 const experienceData: ExperienceItem[] = [
   {
-    id: "fs-2024",
-    period: "2024 - 2025",
-    role: "Full Stack Developer",
+    id: "fs-2022",
+    period: "2022 - 2024",
+    role: "Profesor de Música (Establecimiento educativo público)",
   },
   {
-    id: "protolab",
-    period: "2025 - presente",
-    role: "Designer & Full Stack Developer en Protolab",
+    id: "fs-2024",
+    period: "2024 - Presente",
+    role: "Desarrollador Web Full Stack (Freelance)",
   },
 ];
 
@@ -453,7 +478,7 @@ const studiesData: StudyItem[] = [
   },
   {
     id: "web",
-    period: "2025 - presente",
+    period: "2025 - Presente",
     title: "Técnico en Programación Web (Universidad Nacional de San Juan)",
   },
 ];
@@ -462,15 +487,16 @@ export default function App() {
   const [data, setData] = useState<Blob | null>(null);
 
   useEffect(() => {
-    fetch("/fernandozarate-portfolio.pdf")
+    fetch("/cv_fernandozarate_2026a.pdf")
       .then((res) => res.blob())
-      .then(setData);
+      .then(setData)
+      .catch((err) => console.error("Error loading CV:", err));
   }, []);
 
   return (
-    <Flex paddingBlock="12" paddingInline="4" m="auto" w="100%" maxW="800px" direction="column" gap="12">
+    <Flex paddingBlock="8" paddingInline="4" m="auto" w="100%" maxW="800px" direction="column" gap="16">
       {/* nombre */}
-      <Flex gap="4" justify="space-between">
+      <Flex gap="4" justify="space-between" align="center">
         <Heading as="h1" size="lg">
           Fernando Aníbal del Valle Zárate
         </Heading>
@@ -480,48 +506,46 @@ export default function App() {
       {/* Sobre mí */}
       <Flex direction="column" gap="4">
         <Heading as="h2" size="2xl">
-          Full Stack Designer
+          Desarrollador Web Full Stack
         </Heading>
         <Text color="fg.muted">
-          Desarrollador Full Stack y fundador de{" "}
-          <Link fontWeight="bold" href="https://byprotolab.vercel.app/" target="_blank" rel="noopener noreferrer">
-            Protolab
-          </Link>{" "}
-          con sólida experiencia en el ciclo completo de creación de productos digitales. Especialista en integrar
-          diseño de interfaz de usuario (UI), experiencia de usuario (UX) y programación robusta en frontend y backend.
-          Perfil creativo con formación pedagógica, enfocado en la resolución de problemas complejos y la comunicación
-          efectiva en equipos técnicos.
+          Desarrollador Web Full Stack con capacidad para crear productos completos end-to-end, integrando diseño UX/UI,
+          desarrollo Frontend y Backend, y asegurando arquitecturas robustas y lógica de negocio eficiente. Experiencia
+          en despliegue y mantenimiento de aplicaciones, con visión de producto para transformar objetivos y necesidades
+          del usuario en soluciones técnicas y funcionales.
         </Text>
       </Flex>
 
       {/* Tecnologías */}
       <Flex direction="column" gap="4">
         <Heading as="h2" size="2xl">
-          Tecnologías y Herramientas de Desarrollo
+          Tecnologías y herramientas
         </Heading>
-
-        <Accordion.Root collapsible variant="enclosed">
+        <Flex direction="column" gap="2">
           {techStackData.map((category) => (
-            <Accordion.Item key={category.id} value={category.id}>
-              {/* Header */}
-              <Accordion.ItemTrigger cursor="pointer">
-                <Span flex="1">{category.title}</Span>
-                <Accordion.ItemIndicator />
-              </Accordion.ItemTrigger>
-
-              {/* Contenido */}
-              <Accordion.ItemContent>
-                <Accordion.ItemBody>
-                  <Flex as="ul" gap="8" wrap="wrap" color="fg.muted" listStyle="none" fontSize="xs">
-                    {category.items.map((tech) => (
-                      <li key={tech}>{tech}</li>
-                    ))}
+            <Flex
+              p="2"
+              key={category.id}
+              direction="column"
+              gap="2"
+              borderRadius="sm"
+              border="1px solid"
+              borderColor="border">
+              <Heading as="h3" size="md">
+                {category.title}
+              </Heading>
+              <Separator />
+              <Flex as="ul" wrap="wrap" columnGap="4" rowGap="2" listStyleType="none" color="fg.muted" fontSize="sm">
+                {category.items.map((tech, i) => (
+                  <Flex as="li" key={tech} gap="1rem" align="center" whiteSpace="nowrap">
+                    {tech}
+                    {i < category.items.length - 1 && <span> · </span>}
                   </Flex>
-                </Accordion.ItemBody>
-              </Accordion.ItemContent>
-            </Accordion.Item>
+                ))}
+              </Flex>
+            </Flex>
           ))}
-        </Accordion.Root>
+        </Flex>
       </Flex>
 
       {/* Proyectos */}
@@ -529,92 +553,20 @@ export default function App() {
         <Heading as="h2" size="2xl">
           Proyectos Full Stack
         </Heading>
-        <Accordion.Root collapsible variant="enclosed">
+        {/* Accordion para proyectos */}
+        <Accordion.Root p="2" collapsible variant="enclosed">
           {projectsData.map((project) => (
             <Accordion.Item key={project.id} value={project.id}>
-              {/* Header (solo nombre del proyecto) */}
-              <Accordion.ItemTrigger cursor="pointer">
+              {/* Header */}
+              <Accordion.ItemTrigger cursor="pointer" bg="bg">
                 <Span flex="1">{project.title}</Span>
                 <Accordion.ItemIndicator />
               </Accordion.ItemTrigger>
 
-              {/* Contenido (proyecto completo) */}
-              <Accordion.ItemContent>
+              {/* Contenido */}
+              <Accordion.ItemContent bg="bg">
                 <Accordion.ItemBody>
                   <ProjectSection project={project} />
-                </Accordion.ItemBody>
-              </Accordion.ItemContent>
-            </Accordion.Item>
-          ))}
-        </Accordion.Root>
-      </Flex>
-      {/* Diseño de Ads */}
-      <Flex direction="column" gap="4">
-        <Heading as="h2" size="2xl">
-          Diseño de Ads
-        </Heading>
-
-        <Accordion.Root collapsible variant="enclosed">
-          {adsDesignData.map((brand) => (
-            <Accordion.Item key={brand.id} value={brand.id}>
-              {/* Header = Marca */}
-              <Accordion.ItemTrigger cursor="pointer">
-                <Span flex="1">{brand.brand}</Span>
-                <Accordion.ItemIndicator />
-              </Accordion.ItemTrigger>
-
-              {/* Contenido = Carousel */}
-              <Accordion.ItemContent overflow="hidden">
-                <Accordion.ItemBody>
-                  <Carousel.Root
-                    slideCount={brand.items.length}
-                    position="relative"
-                    border="1px solid"
-                    borderColor="gray.200"
-                    overflow="hidden">
-                    <Carousel.Control width="full" position="relative">
-                      <Carousel.PrevTrigger asChild>
-                        <ActionButton insetStart="4">
-                          <LuChevronLeft />
-                        </ActionButton>
-                      </Carousel.PrevTrigger>
-
-                      <Carousel.ItemGroup width="full">
-                        {brand.items.map((item, index) => (
-                          <Carousel.Item key={item.src} index={index}>
-                            <Box
-                              w="100%"
-                              h="420px"
-                              bg="white"
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center">
-                              <Image
-                                src={item.src}
-                                alt={`${brand.brand} anuncio ${index + 1}`}
-                                maxW="100%"
-                                maxH="100%"
-                                w="auto"
-                                h="auto"
-                                objectFit="contain"
-                                loading="lazy"
-                              />
-                            </Box>
-                          </Carousel.Item>
-                        ))}
-                      </Carousel.ItemGroup>
-
-                      <Carousel.NextTrigger asChild>
-                        <ActionButton insetEnd="4">
-                          <LuChevronRight />
-                        </ActionButton>
-                      </Carousel.NextTrigger>
-
-                      <Box position="absolute" bottom="6" width="full">
-                        <Carousel.Indicators boxSize="2" opacity="0.5" _current={{ width: "10", opacity: 1 }} />
-                      </Box>
-                    </Carousel.Control>
-                  </Carousel.Root>
                 </Accordion.ItemBody>
               </Accordion.ItemContent>
             </Accordion.Item>
@@ -627,25 +579,35 @@ export default function App() {
         <Heading as="h2" size="2xl">
           Experiencia
         </Heading>
-
-        <Accordion.Root collapsible variant="enclosed">
+        <Flex direction="column" gap="2">
           {experienceData.map((exp) => (
-            <Accordion.Item key={exp.id} value={exp.id}>
-              {/* Header = fechas */}
-              <Accordion.ItemTrigger cursor="pointer">
-                <Span flex="1">{exp.period}</Span>
-                <Accordion.ItemIndicator />
-              </Accordion.ItemTrigger>
-
-              {/* Contenido = rol */}
-              <Accordion.ItemContent>
-                <Accordion.ItemBody>
-                  <Text color="fg.muted">{exp.role}</Text>
-                </Accordion.ItemBody>
-              </Accordion.ItemContent>
-            </Accordion.Item>
+            <Flex
+              p="2"
+              key={exp.id}
+              minH="60px"
+              gap="2"
+              justify="space-between"
+              align="center"
+              borderRadius="sm"
+              border="1px solid"
+              borderColor="border">
+              <Heading flex="1" as="h3" size="md">
+                {exp.period}
+              </Heading>
+              <Flex
+                flex="1"
+                as="ul"
+                justify="flex-end"
+                gap="6"
+                wrap="wrap"
+                listStyleType="none"
+                color="fg.muted"
+                fontSize="sm">
+                <Text>{exp.role}</Text>
+              </Flex>
+            </Flex>
           ))}
-        </Accordion.Root>
+        </Flex>
       </Flex>
 
       {/* Estudios */}
@@ -653,70 +615,85 @@ export default function App() {
         <Heading as="h2" size="2xl">
           Estudios formales
         </Heading>
-
-        <Accordion.Root collapsible variant="enclosed">
+        <Flex direction="column" gap="2">
           {studiesData.map((study) => (
-            <Accordion.Item key={study.id} value={study.id}>
-              {/* Header = fechas */}
-              <Accordion.ItemTrigger cursor="pointer">
-                <Span flex="1">{study.period}</Span>
-                <Accordion.ItemIndicator />
-              </Accordion.ItemTrigger>
-
-              {/* Contenido = título */}
-              <Accordion.ItemContent>
-                <Accordion.ItemBody>
-                  <Text color="fg.muted">{study.title}</Text>
-                </Accordion.ItemBody>
-              </Accordion.ItemContent>
-            </Accordion.Item>
+            <Flex
+              p="2"
+              key={study.id}
+              minH="60px"
+              gap="2"
+              justify="space-between"
+              align="center"
+              borderRadius="sm"
+              border="1px solid"
+              borderColor="border">
+              <Heading flex="1" as="h3" size="md">
+                {study.period}
+              </Heading>
+              <Flex
+                flex="1"
+                as="ul"
+                justify="flex-end"
+                gap="6"
+                wrap="wrap"
+                listStyleType="none"
+                color="fg.muted"
+                fontSize="sm">
+                <Text>{study.title}</Text>
+              </Flex>
+            </Flex>
           ))}
-        </Accordion.Root>
+        </Flex>
       </Flex>
+
       {/* Contacto */}
       <Flex direction="column" gap="4">
-        <Heading as="h2" size="2xl">
+        <Heading as="h2" size="2xl" textAlign={{ base: "center", md: "left" }}>
           Contacto
         </Heading>
         <Flex direction="column" gap="2">
-          <Text color="fg.muted">
-            Escríbeme a{" "}
-            <Link fontWeight="bold" href="mailto:zaratefernandoanibal@gmail.com">
-              zaratefernandoanibal@gmail.com
-            </Link>
-          </Text>
-          <Flex gap="4" wrap="wrap">
-            <Button size="xs" variant="outline">
-              <Link
-                fontWeight="bold"
-                href="https://github.com/FernandoAvZarate"
-                target="_blank"
-                rel="noopener noreferrer"
-                textDecoration="none">
-                Github <HiMiniArrowTrendingUp />
+          <Flex p="2" direction="column" gap="2" borderRadius="sm" border="1px solid" borderColor="border">
+            <Text color="fg.muted" fontSize={{ base: "sm", md: "md" }} textAlign={{ base: "center", md: "left" }}>
+              Escríbeme a{" "}
+              <Link fontWeight="bold" href="mailto:zaratefernandoanibal@gmail.com">
+                zaratefernandoanibal@gmail.com
               </Link>
-            </Button>
-            <Button size="xs" variant="outline">
-              <Link
-                fontWeight="bold"
-                href="https://www.linkedin.com/in/fernandozaratedev/"
-                target="_blank"
-                rel="noopener noreferrer"
-                textDecoration="none">
-                Linkedin <HiMiniArrowTrendingUp />
-              </Link>
-            </Button>
-          </Flex>
-        </Flex>
-        <Flex direction="column" gap="2">
-          <Text color="fg.muted">¿Quieres más información?</Text>
-          {data ? (
-            <DownloadTrigger data={data} fileName="fernandozarate-portfolio.pdf" mimeType="application/pdf" asChild>
-              <Button variant="outline" fontWeight="bold">
-                Descargar CV
+            </Text>
+            <Flex gap="4" wrap="wrap" justify={{ base: "center", md: "flex-start" }}>
+              <Button size="xs" variant="outline" asChild>
+                <Link
+                  fontWeight="bold"
+                  href="https://github.com/FernandoAvZarate"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  textDecoration="none">
+                  Github <HiMiniArrowTrendingUp />
+                </Link>
               </Button>
-            </DownloadTrigger>
-          ) : null}
+              <Button size="xs" variant="outline" asChild>
+                <Link
+                  fontWeight="bold"
+                  href="https://www.linkedin.com/in/fernandozaratedev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  textDecoration="none">
+                  Linkedin <HiMiniArrowTrendingUp />
+                </Link>
+              </Button>
+            </Flex>
+          </Flex>
+          <Flex p="2" direction="column" gap="2" borderRadius="sm" border="1px solid" borderColor="border">
+            <Text color="fg.muted" fontSize={{ base: "sm", md: "md" }} textAlign={{ base: "center", md: "left" }}>
+              ¿Quieres más información?
+            </Text>
+            {data ? (
+              <DownloadTrigger data={data} fileName="cv_fernandozarate_2026a.pdf" mimeType="application/pdf" asChild>
+                <Button variant="outline" fontWeight="bold">
+                  Descargar CV
+                </Button>
+              </DownloadTrigger>
+            ) : null}
+          </Flex>
         </Flex>
       </Flex>
     </Flex>
