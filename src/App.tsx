@@ -487,7 +487,7 @@ export default function App() {
   const [data, setData] = useState<Blob | null>(null);
 
   useEffect(() => {
-    fetch("/cv_fernandozarate_2026a.pdf")
+    fetch("/cv_fernandozarate_2026ab.pdf")
       .then((res) => res.blob())
       .then(setData)
       .catch((err) => console.error("Error loading CV:", err));
@@ -687,7 +687,7 @@ export default function App() {
               ¿Quieres más información?
             </Text>
             {data ? (
-              <DownloadTrigger data={data} fileName="cv_fernandozarate_2026a.pdf" mimeType="application/pdf" asChild>
+              <DownloadTrigger data={data} fileName="cv_fernandozarate_2026ab.pdf" mimeType="application/pdf" asChild>
                 <Button variant="outline" fontWeight="bold">
                   Descargar CV
                 </Button>
